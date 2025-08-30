@@ -39,7 +39,7 @@ const WeatherReport = () => {
     setSurfCondition(getSurfCondition(weather));
   }, [weather]);
 
-  const GraphicRender = ({status}) => {
+  const GraphicRender = ({ status }) => {
     let data = { src: "/src/assets/danger.svg", alt: "unknown" };
     switch (status) {
       case SURF_STATUS.GOOD:
@@ -58,8 +58,12 @@ const WeatherReport = () => {
       default:
         break;
     }
-    return <><img src={data.src} alt={data.alt} />
-    <p>{data.alt}</p></>;
+    return (
+      <>
+        <img src={data.src} alt={data.alt} />
+        <p>{data.alt}</p>
+      </>
+    );
   };
   return (
     <div className="">
@@ -100,12 +104,11 @@ const WeatherReport = () => {
 
       {weather && selectedLocation && (
         <div className="forcastCard card">
-          <GraphicRender status={surfCondition.status}/>
           <p className="text-lg font-semibold">Weather for {place}:</p>
+          <GraphicRender status={surfCondition.status} />
           <p>Max Temp: {weather.daily.temperature_2m_max[0]}°C</p>
           <p>Min Temp: {weather.daily.temperature_2m_min[0]}°C</p>
           <p>Max Wind: {weather.daily.windspeed_10m_max[0]} km/h</p>
-          <div className="">{surfCondition.status}</div>
         </div>
       )}
     </div>

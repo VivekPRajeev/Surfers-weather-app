@@ -4,6 +4,11 @@
   padding: 2rem;
   text-align: center;
 }
+input {
+  height: 35px;
+  margin-right: 6px;
+  border-radius: 10px;
+}
 
 .logo {
   height: 6em;
@@ -45,6 +50,12 @@
   box-shadow: 5px 5px 11px 5px rgba(0, 0, 0, 0.3);
   border-radius: 10px;
   outline: 1px solid rgb(255, 255, 255);
+  background-color: rgba(255, 255, 255, 0.3); /* semi-transparent white */
+  backdrop-filter: blur(10px); /* blur effect */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 20px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 }
 .forcastCard img {
   height: 150px;
