@@ -19,7 +19,10 @@ const WeatherReport = () => {
     error,
   } = useWeather(selectedLocation || {});
   const handleSearchKeyDown = (e) => {
-    if (e.key === "Enter") setSearchPlace(place);
+    if (e.key === "Enter") {
+      setSearchPlace(place);
+      setSelectedLocation(null);
+    }
   };
 
   const getSurfCondition = (weather) => {
@@ -74,34 +77,49 @@ const WeatherReport = () => {
           <input
             type="text"
             value={place}
-            onChange={(e) => setPlace(e.target.value)}
+            onChange={(e) => {
+              setPlace(e.target.value);
+              setSelectedLocation(null);
+            }}
             onKeyDown={handleSearchKeyDown}
             placeholder="Type a German city..."
             className=""
           />
-          <button onClick={() => setSearchPlace(place)} className="">
+          <button
+            onClick={() => {
+              setSearchPlace(place);
+              setSelectedLocation(null);
+            }}
+            className=""
+          >
             Search
           </button>
         </div>
       </div>
       {searchPlace && locations && locations.length > 0 && (
-        <ul className="mb-4">
-          {locations.map((loc) => (
-            <li
-              key={loc.id}
-              className=""
-              onClick={() => {
-                setSelectedLocation({ lat: loc.latitude, lon: loc.longitude });
-                setPlace(`${loc.name}, ${loc.country}`);
-                setSearchPlace("");
-              }}
-            >
-              {loc.name}, {loc.country}
-            </li>
-          ))}
-        </ul>
+        <>
+          <p>Please choose the correct location from the results below :</p>
+          <ul className="mb-4">
+            {locations.map((loc) => (
+              <li
+                key={loc.id}
+                className=""
+                onClick={() => {
+                  setSelectedLocation({
+                    lat: loc.latitude,
+                    lon: loc.longitude,
+                  });
+                  setPlace(`${loc.name}, ${loc.country}`);
+                  setSearchPlace("");
+                }}
+              >
+                {loc.name}, {loc.country}
+              </li>
+            ))}
+          </ul>
+        </>
       )}
-
+      {isLoading ? <span>Loading Data...Please wait</span> : <></>}
       {weather && selectedLocation && (
         <div className="forcastCard card">
           <p className="text-lg font-semibold">Weather for {place}:</p>
