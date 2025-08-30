@@ -44,5 +44,8 @@
 .forcastCard {
   box-shadow: 5px 5px 11px 5px rgba(0, 0, 0, 0.3);
   border-radius: 10px;
-  outline: 1px solid rgb(255, 255, 255); 
+  outline: 1px solid rgb(255, 255, 255);
+}
+.forcastCard img {
+  height: 150px;
 }

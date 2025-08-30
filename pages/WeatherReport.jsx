@@ -1,11 +1,16 @@
 import { useLocation } from "../hooks/useLocation";
 import { useWeather } from "../hooks/useWeather";
 import { useEffect, useState } from "react";
+const SURF_STATUS = {
+  GOOD: "good",
+  WINDY: "windy",
+  DANGER: "danger",
+};
 const WeatherReport = () => {
   const [place, setPlace] = useState("");
   const [searchPlace, setSearchPlace] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
-    const [surfCondition, setSurfCondition] = useState({});
+  const [surfCondition, setSurfCondition] = useState({});
 
   const { data: locations } = useLocation(searchPlace);
   const {
@@ -23,17 +28,39 @@ const WeatherReport = () => {
     const maxWind = weather.daily.windspeed_10m_max[0];
 
     if (maxWind < 15) {
-      return { status: "Good to Surf", color: "green" };
+      return { status: SURF_STATUS.GOOD, color: "green" };
     } else if (maxWind < 25) {
-      return { status: "Be Cautious", color: "yellow" };
+      return { status: SURF_STATUS.WINDY, color: "yellow" };
     } else {
-      return { status: "Not Good to Surf", color: "red" };
+      return { status: SURF_STATUS.DANGER, color: "red" };
     }
   };
   useEffect(() => {
-    setSurfCondition(getSurfCondition(weather))
+    setSurfCondition(getSurfCondition(weather));
   }, [weather]);
 
+  const GraphicRender = ({status}) => {
+    let data = { src: "/src/assets/danger.svg", alt: "unknown" };
+    switch (status) {
+      case SURF_STATUS.GOOD:
+        data.src = "/src/assets/surfing.svg";
+        data.alt = "Good to surf";
+        break;
+      case SURF_STATUS.WINDY:
+        data.src = "/src/assets/windy.svg";
+        data.alt = "Ok to surf but windy";
+        break;
+      case SURF_STATUS.DANGER:
+        data.src = "/src/assets/danger.svg";
+        data.alt = "Dangerous to surf";
+        break;
+
+      default:
+        break;
+    }
+    return <><img src={data.src} alt={data.alt} />
+    <p>{data.alt}</p></>;
+  };
   return (
     <div className="">
       <h1 className="">Surfer Weather Forecast</h1>
@@ -48,10 +75,7 @@ const WeatherReport = () => {
             placeholder="Type a German city..."
             className=""
           />
-          <button
-            onClick={() => setSearchPlace(place)}
-            className=""
-          >
+          <button onClick={() => setSearchPlace(place)} className="">
             Search
           </button>
         </div>
@@ -65,7 +89,7 @@ const WeatherReport = () => {
               onClick={() => {
                 setSelectedLocation({ lat: loc.latitude, lon: loc.longitude });
                 setPlace(`${loc.name}, ${loc.country}`);
-                setSearchPlace('');
+                setSearchPlace("");
               }}
             >
               {loc.name}, {loc.country}
@@ -76,24 +100,12 @@ const WeatherReport = () => {
 
       {weather && selectedLocation && (
         <div className="forcastCard card">
+          <GraphicRender status={surfCondition.status}/>
           <p className="text-lg font-semibold">Weather for {place}:</p>
           <p>Max Temp: {weather.daily.temperature_2m_max[0]}°C</p>
           <p>Min Temp: {weather.daily.temperature_2m_min[0]}°C</p>
           <p>Max Wind: {weather.daily.windspeed_10m_max[0]} km/h</p>
-
-          {/* Surf indicator */}
-          <div
-            className={`mt-2 p-2 rounded-md text-white font-bold text-center
-                     ${
-                       surfCondition.color === "green"
-                         ? "bg-green-500"
-                         : surfCondition.color === "yellow"
-                         ? "bg-yellow-400"
-                         : "bg-red-500"
-                     }`}
-          >
-            {surfCondition.status}
-          </div>
+          <div className="">{surfCondition.status}</div>
         </div>
       )}
     </div>
